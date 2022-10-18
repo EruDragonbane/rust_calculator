@@ -54,6 +54,23 @@ fn scan_digits (ps: &mut ParseState) -> CalcInt {
 }
 /// Digit Parse
 ///  Operators
+fn multiply_divide (ps: &mut ParseState) -> CalcInt {
+    let mut value: CalcInt = exponent(ps);
+    while token(ps) == '*' || token(ps) == '/' {
+        match token(ps) {
+            '*' => {
+                lex_match(ps, '*');
+                value *= exponent(ps);
+            },
+            '/' => {
+                lex_match(ps, '/');
+                value /= exponent(ps);
+            },
+            _ => {},
+        }
+        return value
+    }
+}
 fn add_subtract (ps: &mut ParseState) -> CalcInt {
     let mut value: CalcInt = multiply_divide(ps);
     match token(ps) {
@@ -71,7 +88,7 @@ fn add_subtract (ps: &mut ParseState) -> CalcInt {
 }
 /// Main
 fn main() {
-    println!("\nBrackets\t()\nAddition\t+\nSubsraction\t-\nMultiplication\t*\nDivision\t/\nExponentiation\t^\nModulus\t\t%\n");
+    println!("\nBrackets\t()\nAddition\t+\nSubtraction\t-\nMultiplication\t*\nDivision\t/\nExponentiation\t^\nModulus\t\t%\n");
     println!("Sample Question: 2+4*8/(8%(2^3))\n");
 
     let mut ps = ParseState {
