@@ -22,6 +22,37 @@ fn lex_match (ps: &mut ParseState, expected: char) {
     std::process::exit(1);    
 }
 /// Parse, Token Index and Errors
+/// Digit Parse
+fn scan_digits (ps: &mut ParseState) -> CalcInt {
+    const BASE: CalcInt = 10;
+    let mut value: CalcInt = 0;
+    loop {
+        let digit: CalcInt;
+        match token(ps) {
+            '0' => digit = 0,
+            '1' => digit = 1,
+            '2' => digit = 2,
+            '3' => digit = 3,
+            '4' => digit = 4,
+            '5' => digit = 5,
+            '6' => digit = 6,
+            '7' => digit = 7,
+            '8' => digit = 8,
+            '9' => digit = 9,
+            _ => break
+        }
+        if digit >= BASE {
+            bad_formula(format!("Digit {digit} out of range for base {BASE}"));
+        }
+        if value > (std::i64::MAX - digit)/BASE {
+            bad_formula(format!("Integer overflow"));
+        }
+        value = value*BASE+digit;
+        ps.index += 1;
+    }
+    return value
+}
+/// Digit Parse
 /// Main
 fn main() {
     println!("\nBrackets\t()\nAddition\t+\nSubsraction\t-\nMultiplication\t*\nDivision\t/\nExponentiation\t^\nModulus\t\t%\n");
