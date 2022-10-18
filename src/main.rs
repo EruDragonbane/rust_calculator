@@ -53,6 +53,22 @@ fn scan_digits (ps: &mut ParseState) -> CalcInt {
     return value
 }
 /// Digit Parse
+///  Operators
+fn add_subtract (ps: &mut ParseState) -> CalcInt {
+    let mut value: CalcInt = multiply_divide(ps);
+    match token(ps) {
+        '+' => {
+            lex_match(ps, '+');
+            value += multiply_divide(ps);
+        },
+        '-' => {
+            lex_match(ps, '-');
+            value -= multiply_divide(ps);
+        },
+        _ => {},
+    }
+    return value
+}
 /// Main
 fn main() {
     println!("\nBrackets\t()\nAddition\t+\nSubsraction\t-\nMultiplication\t*\nDivision\t/\nExponentiation\t^\nModulus\t\t%\n");
