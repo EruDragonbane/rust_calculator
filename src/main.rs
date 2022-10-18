@@ -54,6 +54,28 @@ fn scan_digits (ps: &mut ParseState) -> CalcInt {
 }
 /// Digit Parse
 ///  Operators
+fn exponent (ps: &mut ParseState) -> CalcInt {
+    let mut value: CalcInt = brackets(ps);
+    let exponent_value: CalcInt = value;
+    let mut counter: CalcInt = 1;
+    if token(ps) == '^' {
+        lex_match(ps, '^');
+        let pow: CalcInt = brackets(ps);
+        if pow == 0 {
+            return 1
+        }
+        else if pow == 1 {
+            return value
+        }
+        else {
+            while counter < pow {
+                value *= exponent_value;
+                counter += 1;
+            }
+        }
+    }
+    return value
+}
 fn multiply_divide (ps: &mut ParseState) -> CalcInt {
     let mut value: CalcInt = exponent(ps);
     while token(ps) == '*' || token(ps) == '/' {
@@ -68,8 +90,8 @@ fn multiply_divide (ps: &mut ParseState) -> CalcInt {
             },
             _ => {},
         }
-        return value
     }
+    return value
 }
 fn add_subtract (ps: &mut ParseState) -> CalcInt {
     let mut value: CalcInt = multiply_divide(ps);
