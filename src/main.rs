@@ -54,6 +54,22 @@ fn scan_digits (ps: &mut ParseState) -> CalcInt {
 }
 /// Digit Parse
 ///  Operators
+fn brackets (ps: &mut ParseState) -> CalcInt {
+    let value: CalcInt;
+    if token(ps) == '(' {
+        lex_match(ps, '(');
+        value = add_subtract(ps);
+        lex_match(ps, ')');
+    }
+    else if token(ps).is_digit(10) || token(ps) == '+' || token(ps) == '-' {
+        value = scan_digits(ps);
+    }
+    else {
+        value = 0;
+        bad_formula("Bad Formula".to_string());
+    }
+    return value
+}
 fn exponent (ps: &mut ParseState) -> CalcInt {
     let mut value: CalcInt = brackets(ps);
     let exponent_value: CalcInt = value;
