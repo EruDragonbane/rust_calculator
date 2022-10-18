@@ -92,9 +92,9 @@ fn exponent (ps: &mut ParseState) -> CalcInt {
     }
     return value
 }
-fn multiply_divide (ps: &mut ParseState) -> CalcInt {
+fn multiply_divide_modulo (ps: &mut ParseState) -> CalcInt {
     let mut value: CalcInt = exponent(ps);
-    while token(ps) == '*' || token(ps) == '/' {
+    while token(ps) == '*' || token(ps) == '/' || token(ps) == '%' {
         match token(ps) {
             '*' => {
                 lex_match(ps, '*');
@@ -104,21 +104,31 @@ fn multiply_divide (ps: &mut ParseState) -> CalcInt {
                 lex_match(ps, '/');
                 value /= exponent(ps);
             },
+            '%' => {
+                lex_match(ps, '%');
+                let modulo: CalcInt = exponent(ps);
+                if modulo == 0 {
+                    return 0
+                } 
+                else {
+                    value %= modulo
+                }
+            },
             _ => {},
         }
     }
     return value
 }
 fn add_subtract (ps: &mut ParseState) -> CalcInt {
-    let mut value: CalcInt = multiply_divide(ps);
+    let mut value: CalcInt = multiply_divide_modulo(ps);
     match token(ps) {
         '+' => {
             lex_match(ps, '+');
-            value += multiply_divide(ps);
+            value += multiply_divide_modulo(ps);
         },
         '-' => {
             lex_match(ps, '-');
-            value -= multiply_divide(ps);
+            value -= multiply_divide_modulo(ps);
         },
         _ => {},
     }
