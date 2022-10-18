@@ -134,4 +134,11 @@ fn main() {
         index: 1,
     };
     print!("Expression: \n\t");
+    match io::stdin().read_line(&mut ps.line) {
+        Ok(_n) => {
+            let result: CalcInt = add_subtract(&mut ps);
+            println!("Result: {result}");
+        },
+        Err(error) => bad_formula(format!("Error: {error}")),
+    }
 }
