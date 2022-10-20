@@ -1,6 +1,6 @@
 use std::io;
 
-type CalcInt = f64;
+type CalcFloat = f64;
 /// Parse, Token Index and Errors
 struct ParseState {
     line: String,
@@ -23,11 +23,11 @@ fn lex_match (ps: &mut ParseState, expected: char) {
 }
 /// Parse, Token Index and Errors
 /// Digit Parse
-fn scan_digits (ps: &mut ParseState) -> CalcInt {
-    const BASE: CalcInt = 10.0;
-    let mut value: CalcInt = 0.0;
+fn scan_digits (ps: &mut ParseState) -> CalcFloat {
+    const BASE: CalcFloat = 10.0;
+    let mut value: CalcFloat = 0.0;
     loop {
-        let digit: CalcInt;
+        let digit: CalcFloat;
         match token(ps) {
             '0' => digit = 0.0,
             '1' => digit = 1.0,
@@ -54,8 +54,8 @@ fn scan_digits (ps: &mut ParseState) -> CalcInt {
 }
 /// Digit Parse
 /// Operators
-fn brackets (ps: &mut ParseState) -> CalcInt {
-    let value: CalcInt;
+fn brackets (ps: &mut ParseState) -> CalcFloat {
+    let value: CalcFloat;
     if token(ps) == '(' {
         lex_match(ps, '(');
         value = add_subtract(ps);
@@ -70,13 +70,26 @@ fn brackets (ps: &mut ParseState) -> CalcInt {
     }
     return value
 }
-fn exponent (ps: &mut ParseState) -> CalcInt {
-    let mut value: CalcInt = brackets(ps);
-    let exponent_value: CalcInt = value;
-    let mut counter: i64 = 1;
+fn float_dot (ps: &mut ParseState) -> CalcFloat {
+    let value: CalcFloat = brackets(ps);
+    if token(ps) == '.' {
+        lex_match(ps, '.');
+        println!("{}-{}-{}", token(ps), brackets(ps), token(ps));
+        return 0.0
+        // let right_dot:i64 = brackets(ps).round() as i64;
+        // value = 
+    }
+    else {
+        return 0.0
+    }
+}
+fn exponent (ps: &mut ParseState) -> CalcFloat {
+    let mut value: CalcFloat = float_dot(ps);
     if token(ps) == '^' {
+        let exponent_value: CalcFloat = value;
+        let mut counter: i64 = 1;
         lex_match(ps, '^');
-        let pow: i64 = brackets(ps).round() as i64;
+        let pow: i64 = float_dot(ps).round() as i64;
         if pow == 0 {
             return 1 as f64
         }
@@ -92,8 +105,8 @@ fn exponent (ps: &mut ParseState) -> CalcInt {
     }
     return value
 }
-fn multiply_divide_modulo (ps: &mut ParseState) -> CalcInt {
-    let mut value: CalcInt = exponent(ps);
+fn multiply_divide_modulo (ps: &mut ParseState) -> CalcFloat {
+    let mut value: CalcFloat = exponent(ps);
     while token(ps) == '*' || token(ps) == '/' || token(ps) == '%' {
         match token(ps) {
             '*' => {
@@ -119,8 +132,8 @@ fn multiply_divide_modulo (ps: &mut ParseState) -> CalcInt {
     }
     return value
 }
-fn add_subtract (ps: &mut ParseState) -> CalcInt {
-    let mut value: CalcInt = multiply_divide_modulo(ps);
+fn add_subtract (ps: &mut ParseState) -> CalcFloat {
+    let mut value: CalcFloat = multiply_divide_modulo(ps);
     match token(ps) {
         '+' => {
             lex_match(ps, '+');
@@ -146,7 +159,7 @@ fn main() {
     print!("Expression: \n\t");
     match io::stdin().read_line(&mut ps.line) {
         Ok(_n) => {
-            let result: CalcInt = add_subtract(&mut ps);
+            let result: CalcFloat = add_subtract(&mut ps);
             println!("Result: {result}");
         },
         Err(error) => bad_formula(format!("Error: {error}")),
