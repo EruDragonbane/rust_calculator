@@ -71,16 +71,16 @@ fn brackets (ps: &mut ParseState) -> CalcFloat {
     return value
 }
 fn float_dot (ps: &mut ParseState) -> CalcFloat {
-    let value: CalcFloat = brackets(ps);
+    let mut value: String = brackets(ps).to_string();
     if token(ps) == '.' {
+        value = value + ".";
         lex_match(ps, '.');
-        println!("{}-{}-{}", token(ps), brackets(ps), token(ps));
-        return 0.0
-        // let right_dot:i64 = brackets(ps).round() as i64;
-        // value = 
+        let a = brackets(ps).to_string();
+        value.push_str(&a);
+        return value.parse().unwrap()
     }
     else {
-        return 0.0
+        return value.parse().unwrap()
     }
 }
 fn exponent (ps: &mut ParseState) -> CalcFloat {
