@@ -74,12 +74,13 @@ fn float_dot (ps: &mut ParseState) -> CalcFloat {
     let mut value: String = brackets(ps).to_string();
     if token(ps) == '.' {
         value = value + ".";
-        lex_match(ps, '.');
+        lex_match(ps, '.');     
         let a = brackets(ps).to_string();
         value.push_str(&a);
         return value.parse().unwrap()
     }
     else {
+        value = brackets(ps).to_string();
         return value.parse().unwrap()
     }
 }
@@ -147,9 +148,10 @@ fn add_subtract (ps: &mut ParseState) -> CalcFloat {
     }
     return value
 }
+/// Operators
 /// Main
 fn main() {
-    println!("\nBrackets\t()\nAddition\t+\nSubtraction\t-\nMultiplication\t*\nDivision\t/\nExponentiation\t^\nModulus\t\t%\n");
+    println!("\nBrackets\t()\nAddition\t+\nSubtraction\t-\nMultiplication\t*\nDivision\t/\nExponentiation\t^\nModulus\t\t%\nFloat\t\t.\n");
     println!("Sample Question: 2+4*8/(8%(2^3))\n");
 
     let mut ps = ParseState {
