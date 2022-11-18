@@ -11,7 +11,7 @@ fn token (ps: &ParseState) -> char {
 }
 fn bad_formula (msg: String) {
     eprintln!("Bad Formula: {msg}");
-    ::std::process::exit(1);
+     ::std::process::exit(1);
 }
 fn lex_match (ps: &mut ParseState, expected: char) {
     if token(ps) == expected {
@@ -70,6 +70,7 @@ fn brackets (ps: &mut ParseState) -> CalcFloat {
     }
     return value
 }
+/// I hated this piece of shit but I'll solve
 fn float_dot (ps: &mut ParseState) -> CalcFloat {
     let mut value: String = brackets(ps).to_string();
     if token(ps) == '.' {
@@ -80,7 +81,6 @@ fn float_dot (ps: &mut ParseState) -> CalcFloat {
         return value.parse().unwrap()
     }
     else {
-        value = brackets(ps).to_string();
         return value.parse().unwrap()
     }
 }
@@ -152,7 +152,7 @@ fn add_subtract (ps: &mut ParseState) -> CalcFloat {
 /// Main
 fn main() {
     println!("\nBrackets\t()\nAddition\t+\nSubtraction\t-\nMultiplication\t*\nDivision\t/\nExponentiation\t^\nModulus\t\t%\nFloat\t\t.\n");
-    println!("Sample Question: 2+4*8/(8%(2^3))\n");
+    //println!("Sample Question: 2+4*8/(8%(2^3))\n");
 
     let mut ps = ParseState {
         line: String::new(),
