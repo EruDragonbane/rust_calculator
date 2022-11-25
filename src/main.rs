@@ -164,7 +164,12 @@ fn main() {
     match io::stdin().read_line(&mut ps.line) {
         Ok(_n) => {
             let result: CalcFloat = add_subtract(&mut ps);
-            println!("Result: {result}");
+            if result == result.round() {
+                println!("Result: {result}");
+            }
+            else {
+                println!("Result: {:.2}", result);
+            }
         },
         Err(error) => bad_formula(format!("Error: {error}")),
     }
