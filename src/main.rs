@@ -1,7 +1,7 @@
 use std::io;
 
 type CalcFloat = f64;
-/// Parse, Token Index and Errors
+// Parse, Token Index and Errors
 struct ParseState {
     line: String,
     index: usize,
@@ -21,8 +21,8 @@ fn lex_match (ps: &mut ParseState, expected: char) {
     bad_formula(format!("Error Matching {expected} at index {}", ps.index));
     std::process::exit(1);    
 }
-/// Parse, Token Index and Errors
-/// Digit Parse
+// Parse, Token Index and Errors
+// Digit Parse
 fn scan_digits (ps: &mut ParseState) -> CalcFloat {
     const BASE: CalcFloat = 10.0;
     let mut value: CalcFloat = 0.0;
@@ -52,9 +52,12 @@ fn scan_digits (ps: &mut ParseState) -> CalcFloat {
     }
     return value
 }
-/// Digit Parse
-/// Operators
+// Digit Parse
+// Operators
 fn brackets (ps: &mut ParseState) -> CalcFloat {
+    // Soooooo, the problem is here
+    // https://media.makeameme.org/created/i-mean-i-cb78e603c1.jpg 
+    // If the operation is an addition or subtraction, the program stops.
     let value: CalcFloat;
     if token(ps) == '(' {
         lex_match(ps, '(');
@@ -70,7 +73,6 @@ fn brackets (ps: &mut ParseState) -> CalcFloat {
     }
     return value
 }
-/// I hated this piece of shit but I'll solve
 fn float_dot (ps: &mut ParseState) -> CalcFloat {
     let mut value: String = brackets(ps).to_string();
     if token(ps) == '.' {
@@ -148,11 +150,11 @@ fn add_subtract (ps: &mut ParseState) -> CalcFloat {
     }
     return value
 }
-/// Operators
-/// Main
+// Operators
+// Main
 fn main() {
     println!("\nBrackets\t()\nAddition\t+\nSubtraction\t-\nMultiplication\t*\nDivision\t/\nExponentiation\t^\nModulus\t\t%\nFloat\t\t.\n");
-    //println!("Sample Question: 2+4*8/(8%(2^3))\n");
+    println!("Sample Question: 2+4*8/(8%(2^3))\n");
 
     let mut ps = ParseState {
         line: String::new(),
