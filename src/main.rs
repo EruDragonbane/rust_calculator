@@ -64,7 +64,7 @@ fn brackets (ps: &mut ParseState) -> CalcFloat {
         value = add_subtract(ps);
         lex_match(ps, ')');
     }
-    else if token(ps).is_digit(10) || token(ps) == '+' || token(ps) == '-' {
+    else if token(ps).is_digit(10) == true && token(ps) != '+' {
         value = scan_digits(ps);
     }
     else {
@@ -73,8 +73,27 @@ fn brackets (ps: &mut ParseState) -> CalcFloat {
     }
     return value
 }
+fn factorial (ps: &mut ParseState) -> CalcFloat {
+    let mut value: i64 = brackets(ps) as i64;
+    print!("Value: {value}");
+    if token(ps) == '!' {
+        let mut factorial: i64 = 1;
+        let mut counter: i64 = 1;
+        if value <= 1{
+            return 1 as f64
+        }
+        else {
+            while counter <= value {
+                factorial *= counter;
+                counter += 1;
+            }
+            value = factorial;
+        }
+    }
+    return value as f64;
+}
 fn float_dot (ps: &mut ParseState) -> CalcFloat {
-    let mut value: String = brackets(ps).to_string();
+    let mut value: String = factorial(ps).to_string();
     if token(ps) == '.' {
         value = value + ".";
         lex_match(ps, '.');     
@@ -153,8 +172,17 @@ fn add_subtract (ps: &mut ParseState) -> CalcFloat {
 // Operators
 // Main
 fn main() {
-    println!("\nBrackets\t()\nAddition\t+\nSubtraction\t-\nMultiplication\t*\nDivision\t/\nExponentiation\t^\nModulus\t\t%\nFloat\t\t.\n");
-    println!("Sample Question: 2+4*8/(8%(2^3))\n");
+    println!("
+    Brackets\t\t()
+    Addition\t\t+
+    Subtraction\t\t-
+    Multiplication\t*
+    Division\t\t/
+    Exponentiation\t^
+    Modulus\t\t%
+    Float\t\t.
+    Factorial\t\t!");
+    println!("Sample Question: 2+4*8/(8/(2^3))\n");
 
     let mut ps = ParseState {
         line: String::new(),
